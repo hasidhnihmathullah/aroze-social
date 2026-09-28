@@ -1,0 +1,1718 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Aroze — Social Experience</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --coral-primary: #FF5136;
+            --coral-gradient: linear-gradient(135deg, #FF6A4A 0%, #FF3D2E 100%);
+            --story-ring: linear-gradient(45deg, #FFA07A, #FF3D2E);
+            --bg-canvas: #f2e9e4;
+            --app-bg: #FFFFFF;
+            --text-dark: #121212;
+            --text-muted: #8E8E93;
+            --border-light: #F0F0F2;
+            --radius-card: 32px;
+            --radius-pill: 9999px;
+            --shadow-float: 0 16px 36px -10px rgba(255, 81, 54, 0.35);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: radial-gradient(circle at 20% 20%, #ffd8cc 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, #ffc2b3 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, #f7ebe6 0%, #ecd9d2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px 0;
+            color: var(--text-dark);
+        }
+
+        .mobile-frame {
+            width: 100%;
+            max-width: 420px;
+            height: 890px;
+            background: var(--app-bg);
+            border-radius: 48px;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.2), 0 0 0 10px #1e1e24;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-bar {
+            height: 44px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 28px;
+            font-size: 13px;
+            font-weight: 700;
+            z-index: 50;
+            background: transparent;
+        }
+
+        .dynamic-island {
+            width: 110px;
+            height: 26px;
+            background: #000;
+            border-radius: 20px;
+            margin: 0 auto;
+        }
+
+        .status-icons {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        .screen-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding-bottom: 95px;
+            position: relative;
+            scrollbar-width: none;
+        }
+
+        .screen-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .view-discover {
+            padding: 0 18px 24px;
+        }
+
+        .discover-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 4px 16px;
+        }
+
+        .user-avatar-pill {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: #f1f1f5;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: var(--coral-primary);
+        }
+
+        .user-avatar-pill img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .bell-icon-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--border-light);
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .bell-icon-btn:hover {
+            background: #f8f8fb;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin: 4px 4px 16px;
+        }
+
+        .stories-rail {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 4px 2px 18px;
+            scrollbar-width: none;
+        }
+
+        .stories-rail::-webkit-scrollbar {
+            display: none;
+        }
+
+        .story-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .story-ring {
+            width: 62px;
+            height: 62px;
+            border-radius: 50%;
+            padding: 2.5px;
+            background: var(--story-ring);
+            position: relative;
+        }
+
+        .story-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            overflow: hidden;
+            background: #f3f3f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--coral-primary);
+        }
+
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .add-story-ring {
+            background: #f4f4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-story-plus {
+            font-size: 24px;
+            color: var(--coral-primary);
+            font-weight: 400;
+        }
+
+        .live-tag {
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--coral-gradient);
+            color: #fff;
+            font-size: 8px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            border: 1.5px solid #fff;
+            letter-spacing: 0.5px;
+        }
+
+        .story-name {
+            font-size: 11px;
+            font-weight: 600;
+            color: #444;
+            max-width: 60px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .feed-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .arose-post-card {
+            width: 100%;
+            height: 480px;
+            border-radius: var(--radius-card);
+            position: relative;
+            overflow: hidden;
+            background: #111;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .card-media {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .card-scrim {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, 0.85) 100%);
+            pointer-events: none;
+        }
+
+        .card-action-column {
+            position: absolute;
+            right: 14px;
+            bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            z-index: 10;
+        }
+
+        .card-action-btn {
+            background: transparent;
+            border: none;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            cursor: pointer;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4));
+        }
+
+        .card-action-btn svg {
+            width: 26px;
+            height: 26px;
+            transition: transform 0.15s ease;
+        }
+
+        .card-action-btn:active svg {
+            transform: scale(1.25);
+        }
+
+        .card-action-btn.liked svg {
+            fill: var(--coral-primary);
+            stroke: var(--coral-primary);
+        }
+
+        .card-action-btn span {
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .card-info {
+            position: absolute;
+            bottom: 24px;
+            left: 20px;
+            right: 70px;
+            z-index: 10;
+            color: #fff;
+        }
+
+        .card-author-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .author-thumb {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1.5px solid #fff;
+            overflow: hidden;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--coral-primary);
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .author-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .author-meta {
+            cursor: pointer;
+        }
+
+        .author-meta h4 {
+            font-size: 14px;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .author-meta p {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.75);
+        }
+
+        .btn-inline-follow {
+            margin-left: auto;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: #fff;
+            padding: 5px 12px;
+            border-radius: var(--radius-pill);
+            font-size: 11px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-inline-follow.following {
+            background: #fff;
+            color: var(--coral-primary);
+        }
+
+        .card-caption {
+            font-size: 13px;
+            line-height: 1.45;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .view-profile {
+            display: none;
+        }
+
+        .profile-banner-wrap {
+            position: relative;
+            height: 220px;
+            width: 100%;
+            background: #222;
+        }
+
+        .profile-banner-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .back-nav-btn {
+            position: absolute;
+            top: 14px;
+            left: 18px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(8px);
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-core {
+            text-align: center;
+            padding: 0 20px;
+            margin-top: -50px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .profile-avatar-lg {
+            width: 96px;
+            height: 96px;
+            border-radius: 50%;
+            border: 4px solid #fff;
+            margin: 0 auto 10px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 800;
+            color: var(--coral-primary);
+        }
+
+        .profile-avatar-lg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .profile-handle {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .profile-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 36px;
+            margin: 18px 0;
+        }
+
+        .stat-col h3 {
+            font-size: 17px;
+            font-weight: 800;
+        }
+
+        .stat-col span {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        .profile-cta-row {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 22px;
+        }
+
+        .btn-coral-pill {
+            background: var(--coral-gradient);
+            color: #fff;
+            padding: 10px 32px;
+            border-radius: var(--radius-pill);
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px -4px rgba(255, 81, 54, 0.4);
+            transition: opacity 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-gray-pill {
+            background: #f2f2f6;
+            color: var(--text-dark);
+            padding: 10px 28px;
+            border-radius: var(--radius-pill);
+            border: none;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-tabs {
+            display: flex;
+            justify-content: space-around;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .profile-tab {
+            cursor: pointer;
+            position: relative;
+            padding-bottom: 6px;
+        }
+
+        .profile-tab.active {
+            color: var(--text-dark);
+        }
+
+        .profile-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 22px;
+            height: 2.5px;
+            background: var(--coral-primary);
+            border-radius: 2px;
+        }
+
+        .profile-posts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 18px;
+        }
+
+        .grid-tile {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #eee;
+            height: 175px;
+        }
+
+        .grid-tile:nth-child(even) {
+            height: 210px;
+        }
+
+        .grid-tile img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .tile-counter {
+            position: absolute;
+            bottom: 8px;
+            left: 10px;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            padding: 3px 8px;
+            border-radius: var(--radius-pill);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .bottom-dock {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 16px 12px;
+            z-index: 40;
+        }
+
+        .dock-tab {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 10px;
+            font-weight: 600;
+            transition: color 0.15s;
+        }
+
+        .dock-tab svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .dock-tab.active {
+            color: var(--coral-primary);
+        }
+
+        .floating-add-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--coral-gradient);
+            color: #fff;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            cursor: pointer;
+            box-shadow: var(--shadow-float);
+            margin-top: -24px;
+            transition: transform 0.15s;
+        }
+
+        .floating-add-btn:active {
+            transform: scale(0.92);
+        }
+
+        .bottom-sheet-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+            display: none;
+            align-items: flex-end;
+        }
+
+        .bottom-sheet {
+            width: 100%;
+            background: #fff;
+            border-radius: 32px 32px 0 0;
+            padding: 24px;
+            animation: slideUp 0.25s ease-out;
+            max-height: 85%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        .sheet-pill {
+            width: 40px;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .sheet-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #f1f1f5;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            color: #444;
+        }
+
+        .composer-textarea {
+            width: 100%;
+            border: none;
+            outline: none;
+            resize: none;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            background: #f8f8fb;
+            padding: 14px;
+            border-radius: 16px;
+        }
+
+        .preview-box {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            max-height: 220px;
+            margin-bottom: 14px;
+            display: none;
+        }
+
+        .preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .btn-cancel-preview {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(0, 0, 0, 0.6);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .comments-list-wrap {
+            max-height: 320px;
+            overflow-y: auto;
+            margin-bottom: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .comment-row {
+            font-size: 13px;
+            background: #f9f9fb;
+            padding: 10px 14px;
+            border-radius: 14px;
+        }
+
+        .comment-row strong {
+            color: var(--text-dark);
+            margin-right: 6px;
+        }
+
+        .comment-input-bar {
+            display: flex;
+            gap: 8px;
+        }
+
+        .comment-input-bar input {
+            flex: 1;
+            padding: 10px 16px;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            outline: none;
+            font-size: 13px;
+        }
+
+        .toast-bubble {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-30px);
+            background: #111;
+            color: #fff;
+            padding: 8px 18px;
+            border-radius: var(--radius-pill);
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0;
+            transition: all 0.25s ease;
+            z-index: 120;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+            pointer-events: none;
+        }
+
+        .toast-bubble.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .chat-row-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f2f2f6;
+            cursor: pointer;
+        }
+
+        .chat-row-item:hover {
+            background: #fafafc;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0;
+            }
+
+            .mobile-frame {
+                height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="mobile-frame">
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <span>9:41</span>
+            <div class="dynamic-island"></div>
+            <div class="status-icons">
+                <span>5G</span>
+                <span>100%</span>
+            </div>
+        </div>
+
+        <div id="toastBubble" class="toast-bubble">Action completed!</div>
+
+        <!-- Scrollable Screen Body -->
+        <div class="screen-container" id="screenContainer">
+
+            <!-- SCREEN 1: DISCOVER -->
+            <div class="view-discover" id="viewDiscover">
+                <div class="discover-header">
+                    <div class="user-avatar-pill" onclick="switchToProfile()">
+                        {% if user.is_authenticated and user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
+                        {% elif user.is_authenticated %}
+                        {{ user.username|make_list|first|upper }}
+                        {% else %}
+                        ?
+                        {% endif %}
+                    </div>
+                    <button class="bell-icon-btn" onclick="openNotificationsSheet()">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </button>
+                </div>
+
+                <h1 class="section-title">Discover</h1>
+
+                <!-- Stories Rail -->
+                <div class="stories-rail">
+                    <div class="story-item" onclick="openComposer()">
+                        <div class="story-ring add-story-ring">
+                            <span class="add-story-plus">+</span>
+                        </div>
+                        <span class="story-name">Add story</span>
+                    </div>
+
+                    {% for sug in suggestions %}
+                    <div class="story-item" onclick="followUserLive('{{ sug.id }}', this)">
+                        <div class="story-ring">
+                            <div class="story-avatar">
+                                {% if sug.profile.avatar %}
+                                <img src="{{ sug.profile.avatar.url }}" alt="{{ sug.username }}">
+                                {% else %}
+                                {{ sug.username|make_list|first|upper }}
+                                {% endif %}
+                            </div>
+                            {% if forloop.first %}
+                            <span class="live-tag">Live</span>
+                            {% endif %}
+                        </div>
+                        <span class="story-name">{{ sug.username }}</span>
+                    </div>
+                    {% empty %}
+                    <div class="story-item">
+                        <div class="story-ring">
+                            <div class="story-avatar">A</div>
+                        </div>
+                        <span class="story-name">Aroze</span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Feed Stack -->
+                <div class="feed-stack" id="feedStack">
+                    {% for p in posts %}
+                    <article class="arose-post-card" id="post-card-{{ p.id }}" data-post-text="{{ p.content|lower }}"
+                        data-author-name="{{ p.author.username|lower }}">
+                        {% if p.image %}
+                        <img class="card-media" src="{{ p.image.url }}" alt="Post Visual" loading="lazy">
+                        {% else %}
+                        <img class="card-media"
+                            src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800&auto=format&fit=crop&q=80"
+                            alt="Card Placeholder">
+                        {% endif %}
+
+                        <div class="card-scrim"></div>
+
+                        <!-- Right Floating Pillar -->
+                        <div class="card-action-column">
+                            <button class="card-action-btn {% if user in p.likes.all %}liked{% endif %}"
+                                onclick="toggleLikeLive('{{ p.id }}', this)">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z">
+                                    </path>
+                                </svg>
+                                <span class="like-number">{{ p.total_likes }}</span>
+                            </button>
+
+                            <button class="card-action-btn" onclick="openCommentsSheet('{{ p.id }}')">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="12" cy="12" r="1"></circle>
+                                    <path
+                                        d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z">
+                                    </path>
+                                </svg>
+                                <span id="comment-count-{{ p.id }}">{{ p.comments.count }}</span>
+                            </button>
+
+                            <button class="card-action-btn" onclick="sharePostLive('{{ p.id }}')">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <circle cx="18" cy="5" r="3"></circle>
+                                    <circle cx="6" cy="12" r="3"></circle>
+                                    <circle cx="18" cy="19" r="3"></circle>
+                                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                                </svg>
+                                <span>Share</span>
+                            </button>
+                        </div>
+
+                        <!-- Card Author & Content -->
+                        <div class="card-info">
+                            <div class="card-author-row">
+                                <div class="author-thumb" onclick="switchToProfile()">
+                                    {% if p.author.profile.avatar %}
+                                    <img src="{{ p.author.profile.avatar.url }}" alt="{{ p.author.username }}">
+                                    {% else %}
+                                    {{ p.author.username|make_list|first|upper }}
+                                    {% endif %}
+                                </div>
+                                <div class="author-meta" onclick="switchToProfile()">
+                                    <h4>{{ p.author.username }}</h4>
+                                    <p>@{{ p.author.username }}</p>
+                                </div>
+
+                                {% if user.is_authenticated and p.author != user %}
+                                <button
+                                    class="btn-inline-follow {% if p.author.id in following_ids %}following{% endif %}"
+                                    onclick="followUserLive('{{ p.author.id }}', this)">
+                                    {% if p.author.id in following_ids %}Following{% else %}Follow{% endif %}
+                                </button>
+                                {% endif %}
+                            </div>
+                            <div class="card-caption">{{ p.content }}</div>
+                        </div>
+
+                        <!-- Stored Comments Reservoir -->
+                        <div id="stored-comments-{{ p.id }}" style="display: none;">
+                            {% for c in p.comments.all %}
+                            <div class="comment-row">
+                                <strong>@{{ c.author.username }}</strong>{{ c.text }}
+                            </div>
+                            {% empty %}
+                            <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px;">No
+                                comments yet. Start the conversation!</p>
+                            {% endfor %}
+                        </div>
+                    </article>
+                    {% empty %}
+                    <p style="text-align: center; color: var(--text-muted); padding: 60px 20px;">No posts in the stream.
+                        Tap <strong>+</strong> to post your first photo!</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- SCREEN 2: PROFILE -->
+            <div class="view-profile" id="viewProfile">
+                <div class="profile-banner-wrap">
+                    <img class="profile-banner-img"
+                        src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=900&auto=format&fit=crop&q=80"
+                        alt="Banner">
+                    <button class="back-nav-btn" onclick="switchToDiscover()">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5"
+                            viewBox="0 0 24 24">
+                            <polyline points="15 18 9 12 15 6"></polyline>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="profile-core">
+                    <div class="profile-avatar-lg">
+                        {% if user.is_authenticated and user.profile.avatar %}
+                        <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}">
+                        {% elif user.is_authenticated %}
+                        {{ user.username|make_list|first|upper }}
+                        {% else %}
+                        ?
+                        {% endif %}
+                    </div>
+
+                    <h2 class="profile-name">
+                        {% if user.is_authenticated %}
+                        {{ user.username }}
+                        {% else %}
+                        Rachel Flowear
+                        {% endif %}
+                    </h2>
+                    <p class="profile-handle">
+                        {% if user.is_authenticated %}
+                        @{{ user.username }}
+                        {% else %}
+                        @rachelflow
+                        {% endif %}
+                    </p>
+
+                    <div class="profile-stats-row">
+                        <div class="stat-col">
+                            <h3>
+                                {% if user.is_authenticated %}
+                                {{ user.posts.count }}
+                                {% else %}
+                                240
+                                {% endif %}
+                            </h3>
+                            <span>Posts</span>
+                        </div>
+                        <div class="stat-col">
+                            <h3 id="profileFollowerCounter">
+                                {% if user.is_authenticated %}
+                                {{ user.followers_set.count }}
+                                {% else %}
+                                47.3K
+                                {% endif %}
+                            </h3>
+                            <span>Followers</span>
+                        </div>
+                        <div class="stat-col">
+                            <h3>
+                                {% if user.is_authenticated %}
+                                {{ user.following_set.count }}
+                                {% else %}
+                                32K
+                                {% endif %}
+                            </h3>
+                            <span>Following</span>
+                        </div>
+                    </div>
+
+                    <div class="profile-cta-row">
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'logout' %}" class="btn-gray-pill">Sign Out</a>
+                        <button class="btn-coral-pill" onclick="openComposer()">Create Post</button>
+                        {% else %}
+                        <button class="btn-coral-pill" onclick="openAuthSheet()">Log In</button>
+                        <button class="btn-gray-pill" onclick="openAuthSheet()">Register</button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Clickable Profile Tabs -->
+                <div class="profile-tabs">
+                    <span class="profile-tab active" id="tabGridPhotos"
+                        onclick="switchProfileGrid('photos')">Photos</span>
+                    <span class="profile-tab" id="tabGridCollections"
+                        onclick="switchProfileGrid('collections')">Collections</span>
+                    <span class="profile-tab" id="tabGridSaved" onclick="switchProfileGrid('saved')">Saved</span>
+                </div>
+
+                <!-- 2-Column Grid Views -->
+                <div class="profile-posts-grid" id="gridPhotosView">
+                    {% for p in posts %}
+                    {% if p.image %}
+                    <div class="grid-tile">
+                        <img src="{{ p.image.url }}" alt="Grid Item">
+                        <div class="tile-counter">
+                            <span>♥ {{ p.total_likes }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% empty %}
+                    <div class="grid-tile">
+                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=600" alt="Placeholder">
+                        <div class="tile-counter"><span>♥ 2.2K</span></div>
+                    </div>
+                    <div class="grid-tile">
+                        <img src="https://images.unsplash.com/photo-1490750967868-88aa4486c946?w=600" alt="Placeholder">
+                        <div class="tile-counter"><span>♥ 2.28K</span></div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="profile-posts-grid" id="gridCollectionsView" style="display: none;">
+                    <div class="grid-tile" style="height: 190px;">
+                        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600" alt="Travel">
+                        <div class="tile-counter"><span>🌴 Travel Vision (12)</span></div>
+                    </div>
+                    <div class="grid-tile" style="height: 190px;">
+                        <img src="https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=600" alt="Design">
+                        <div class="tile-counter"><span>🎨 Aesthetic (8)</span></div>
+                    </div>
+                </div>
+
+                <div class="profile-posts-grid" id="gridSavedView" style="display: none;">
+                    <div class="grid-tile">
+                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=600" alt="Saved">
+                        <div class="tile-counter"><span>⭐ Bookmarked</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Floating Bottom Dock Navigation -->
+        <nav class="bottom-dock">
+            <button class="dock-tab active" id="tabHome" onclick="switchToDiscover()">
+                <svg fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z" />
+                </svg>
+                <span>Home</span>
+            </button>
+
+            <button class="dock-tab" id="tabSearch" onclick="openSearchSheet()">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <span>Search</span>
+            </button>
+
+            <!-- Prominent Coral '+' Button -->
+            <button class="floating-add-btn" onclick="openComposer()">+</button>
+
+            <button class="dock-tab" id="tabMessages" onclick="openMessagesSheet()">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>Message</span>
+            </button>
+
+            <button class="dock-tab" id="tabProfile" onclick="switchToProfile()">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                <span>Profile</span>
+            </button>
+        </nav>
+
+        <!-- Slide-Up Composer Sheet -->
+        <div class="bottom-sheet-backdrop" id="composerSheet" onclick="closeSheetOnBackdrop(event, 'composerSheet')">
+            <div class="bottom-sheet">
+                <button class="sheet-close-btn" onclick="closeSheet('composerSheet')">✕</button>
+                <div class="sheet-pill"></div>
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Create New Post</h3>
+
+                <textarea id="composerContent" class="composer-textarea" rows="3"
+                    placeholder="Share your latest vision with Aroze..."></textarea>
+
+                <div class="preview-box" id="composerPreviewBox">
+                    <img id="composerPreviewImg" src="" alt="Selected Preview">
+                    <button class="btn-cancel-preview" onclick="clearComposerImage()">✕</button>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                    <input type="file" id="composerFileInput" accept="image/*" style="display: none;"
+                        onchange="handleImagePick(this)">
+                    <button class="btn-gray-pill" onclick="document.getElementById('composerFileInput').click()">
+                        📷 Choose Image
+                    </button>
+                    <button class="btn-coral-pill" id="composerSubmitBtn" onclick="submitArozePost()">
+                        Publish
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide-Up Comments Sheet -->
+        <div class="bottom-sheet-backdrop" id="commentsSheet" onclick="closeSheetOnBackdrop(event, 'commentsSheet')">
+            <div class="bottom-sheet">
+                <button class="sheet-close-btn" onclick="closeSheet('commentsSheet')">✕</button>
+                <div class="sheet-pill"></div>
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px;">Comments</h3>
+
+                <div class="comments-list-wrap" id="commentsDrawerList"></div>
+
+                {% if user.is_authenticated %}
+                <div class="comment-input-bar">
+                    <input type="text" id="drawerCommentInput" placeholder="Add a comment... (Press Enter)"
+                        onkeydown="if(event.key==='Enter') sendDrawerComment()">
+                    <button class="btn-coral-pill" style="padding: 10px 20px;"
+                        onclick="sendDrawerComment()">Send</button>
+                </div>
+                {% else %}
+                <button class="btn-coral-pill" style="width: 100%; justify-content: center;"
+                    onclick="openAuthSheet()">Log in to Comment</button>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Slide-Up Live Search Sheet -->
+        <div class="bottom-sheet-backdrop" id="searchSheet" onclick="closeSheetOnBackdrop(event, 'searchSheet')">
+            <div class="bottom-sheet">
+                <button class="sheet-close-btn" onclick="closeSheet('searchSheet')">✕</button>
+                <div class="sheet-pill"></div>
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Search Aroze</h3>
+
+                <div style="position: relative; margin-bottom: 16px;">
+                    <input type="text" id="liveSearchInput" placeholder="Search creators, keywords..."
+                        oninput="handleLiveSearch(this.value)"
+                        style="width: 100%; padding: 12px 16px; border: 1px solid var(--border-light); border-radius: var(--radius-pill); font-size: 13px; outline: none; background: #f8f8fb;">
+                </div>
+
+                <div id="searchResultsList" style="max-height: 280px; overflow-y: auto;">
+                    <p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px 0;">Type to
+                        filter feed posts in real time.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide-Up Direct Messages Sheet -->
+        <div class="bottom-sheet-backdrop" id="messagesSheet" onclick="closeSheetOnBackdrop(event, 'messagesSheet')">
+            <div class="bottom-sheet">
+                <button class="sheet-close-btn" onclick="closeSheet('messagesSheet')">✕</button>
+                <div class="sheet-pill"></div>
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 12px;">Messages</h3>
+
+                <div style="display: flex; flex-direction: column;">
+                    <div class="chat-row-item" onclick="triggerToast('Opening chat with @Critiano')">
+                        <div class="user-avatar-pill">C</div>
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 13px; font-weight: 700;">Critiano</h4>
+                            <p style="font-size: 11px; color: var(--text-muted);">Loved your new floral capture!</p>
+                        </div>
+                        <span style="font-size: 10px; color: var(--text-muted);">2m</span>
+                    </div>
+
+                    <div class="chat-row-item" onclick="triggerToast('Opening chat with @admin')">
+                        <div class="user-avatar-pill">A</div>
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 13px; font-weight: 700;">Admin Support</h4>
+                            <p style="font-size: 11px; color: var(--text-muted);">Welcome to the Aroze platform!</p>
+                        </div>
+                        <span style="font-size: 10px; color: var(--text-muted);">1h</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide-Up Notifications Sheet -->
+        <div class="bottom-sheet-backdrop" id="notificationsSheet"
+            onclick="closeSheetOnBackdrop(event, 'notificationsSheet')">
+            <div class="bottom-sheet">
+                <button class="sheet-close-btn" onclick="closeSheet('notificationsSheet')">✕</button>
+                <div class="sheet-pill"></div>
+                <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 14px;">Activity & Notifications</h3>
+
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <div style="padding: 10px 14px; background: #f8f8fb; border-radius: 14px; font-size: 13px;">
+                        <strong>@admin</strong> liked your photo. <span
+                            style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">Just now</span>
+                    </div>
+                    <div style="padding: 10px 14px; background: #f8f8fb; border-radius: 14px; font-size: 13px;">
+                        <strong>@Critiano</strong> started following you. <span
+                            style="font-size: 11px; color: var(--text-muted); margin-left: 6px;">1h ago</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide-Up Auth Sheet -->
+        <div class="bottom-sheet-backdrop" id="authSheet" onclick="closeSheetOnBackdrop(event, 'authSheet')">
+            <div class="bottom-sheet">
+                <button class="sheet-close-btn" onclick="closeSheet('authSheet')">✕</button>
+                <div class="sheet-pill"></div>
+                <h3 id="authModalTitle" style="font-size: 17px; font-weight: 800; margin-bottom: 6px;">Sign In to Aroze
+                </h3>
+                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">Connect, share, and explore
+                    creative posts.</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="text" name="username" placeholder="Username" required
+                        style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 10px; font-size: 13px; outline: none;">
+                    <input type="password" name="password" placeholder="Password" required
+                        style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 12px; font-size: 13px; outline: none;">
+                    <textarea name="bio" id="authBioInput" rows="2" placeholder="Bio (Optional)"
+                        style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-light); border-radius: 12px; margin-bottom: 12px; font-size: 13px; outline: none; display: none;"></textarea>
+
+                    <button type="submit" id="authActionBtn" name="login" class="btn-coral-pill"
+                        style="width: 100%; margin-bottom: 10px;">Log In</button>
+                </form>
+
+                <button class="btn-gray-pill" id="authToggleBtn" style="width: 100%; text-align: center;"
+                    onclick="toggleAuthMode()">Don't have an account? Register</button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Interactive Client Script -->
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        function triggerToast(text) {
+            const toast = document.getElementById('toastBubble');
+            toast.innerText = text;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2200);
+        }
+
+        // View Navigation
+        function switchToDiscover() {
+            document.getElementById('viewDiscover').style.display = 'block';
+            document.getElementById('viewProfile').style.display = 'none';
+            document.getElementById('tabHome').classList.add('active');
+            document.getElementById('tabProfile').classList.remove('active');
+            document.getElementById('screenContainer').scrollTop = 0;
+        }
+
+        function switchToProfile() {
+            document.getElementById('viewDiscover').style.display = 'none';
+            document.getElementById('viewProfile').style.display = 'block';
+            document.getElementById('tabProfile').classList.add('active');
+            document.getElementById('tabHome').classList.remove('active');
+            document.getElementById('screenContainer').scrollTop = 0;
+        }
+
+        // Profile Tab Filtering (Photos / Collections / Saved)
+        function switchProfileGrid(mode) {
+            const tabs = ['Photos', 'Collections', 'Saved'];
+            tabs.forEach(t => {
+                document.getElementById('tabGrid' + t).classList.remove('active');
+                document.getElementById('grid' + t + 'View').style.display = 'none';
+            });
+
+            if (mode === 'photos') {
+                document.getElementById('tabGridPhotos').classList.add('active');
+                document.getElementById('gridPhotosView').style.display = 'grid';
+            } else if (mode === 'collections') {
+                document.getElementById('tabGridCollections').classList.add('active');
+                document.getElementById('gridCollectionsView').style.display = 'grid';
+            } else if (mode === 'saved') {
+                document.getElementById('tabGridSaved').classList.add('active');
+                document.getElementById('gridSavedView').style.display = 'grid';
+            }
+        }
+
+        // Sheets Management
+        function openComposer() {
+            const isAuth = "{{ user.is_authenticated }}";
+            if (isAuth === "True") {
+                document.getElementById('composerSheet').style.display = 'flex';
+            } else {
+                openAuthSheet();
+            }
+        }
+
+        let activePostId = null;
+        function openCommentsSheet(postId) {
+            activePostId = postId;
+            const commentsContainer = document.getElementById('stored-comments-' + postId);
+            document.getElementById('commentsDrawerList').innerHTML = commentsContainer.innerHTML;
+            document.getElementById('commentsSheet').style.display = 'flex';
+        }
+
+        function openSearchSheet() {
+            document.getElementById('searchSheet').style.display = 'flex';
+            setTimeout(() => document.getElementById('liveSearchInput').focus(), 200);
+        }
+
+        function openMessagesSheet() {
+            document.getElementById('messagesSheet').style.display = 'flex';
+        }
+
+        function openNotificationsSheet() {
+            const isAuth = "{{ user.is_authenticated }}";
+            if (isAuth === "True") {
+                document.getElementById('notificationsSheet').style.display = 'flex';
+            } else {
+                openAuthSheet();
+            }
+        }
+
+        function openAuthSheet() {
+            document.getElementById('authSheet').style.display = 'flex';
+        }
+
+        function closeSheet(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function closeSheetOnBackdrop(e, sheetId) {
+            if (e.target.id === sheetId) {
+                document.getElementById(sheetId).style.display = 'none';
+            }
+        }
+
+        // Live Search Filter Handler
+        function handleLiveSearch(query) {
+            const clean = query.trim().toLowerCase();
+            const cards = document.querySelectorAll('.arose-post-card');
+            const resultList = document.getElementById('searchResultsList');
+
+            if (!clean) {
+                resultList.innerHTML = '<p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px 0;">Type to filter feed posts in real time.</p>';
+                cards.forEach(c => c.style.display = 'block');
+                return;
+            }
+
+            let matches = 0;
+            resultList.innerHTML = '';
+            cards.forEach(card => {
+                const text = card.getAttribute('data-post-text') || '';
+                const author = card.getAttribute('data-author-name') || '';
+
+                if (text.includes(clean) || author.includes(clean)) {
+                    card.style.display = 'block';
+                    matches++;
+
+                    const item = document.createElement('div');
+                    item.className = 'chat-row-item';
+                    item.innerHTML = `
+                        <div class="user-avatar-pill">${author.charAt(0).toUpperCase()}</div>
+                        <div style="flex: 1;">
+                            <h4 style="font-size: 13px; font-weight: 700;">@${author}</h4>
+                            <p style="font-size: 11px; color: var(--text-muted);">${text.substring(0, 30)}...</p>
+                        </div>
+                    `;
+                    item.onclick = () => {
+                        closeSheet('searchSheet');
+                        card.scrollIntoView({ behavior: 'smooth' });
+                    };
+                    resultList.appendChild(item);
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            if (matches === 0) {
+                resultList.innerHTML = '<p style="font-size: 12px; color: var(--text-muted); text-align: center; padding: 20px 0;">No matching posts found.</p>';
+            }
+        }
+
+        // Image Attachment Handler
+        function handleImagePick(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('composerPreviewImg').src = e.target.result;
+                    document.getElementById('composerPreviewBox').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        function clearComposerImage() {
+            document.getElementById('composerFileInput').value = '';
+            document.getElementById('composerPreviewBox').style.display = 'none';
+        }
+
+        // AJAX Post Creation
+        function submitArozePost() {
+            const content = document.getElementById('composerContent').value.trim();
+            const fileInput = document.getElementById('composerFileInput');
+            const submitBtn = document.getElementById('composerSubmitBtn');
+
+            if (!content && (!fileInput.files || fileInput.files.length === 0)) {
+                triggerToast('Please type text or attach a photo');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('content', content);
+            if (fileInput.files[0]) {
+                formData.append('image', fileInput.files[0]);
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Sharing...';
+
+            fetch('/post/create/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Publish';
+
+                    if (data.status === 'success') {
+                        document.getElementById('composerContent').value = '';
+                        clearComposerImage();
+                        closeSheet('composerSheet');
+                        triggerToast('✨ Post shared on Aroze!');
+
+                        const feed = document.getElementById('feedStack');
+                        const newCard = document.createElement('article');
+                        newCard.className = 'arose-post-card';
+                        newCard.id = 'post-card-' + data.post.id;
+                        newCard.setAttribute('data-post-text', (data.post.content || '').toLowerCase());
+                        newCard.setAttribute('data-author-name', (data.post.author || '').toLowerCase());
+                        newCard.innerHTML = `
+                        <img class="card-media" src="${data.post.image_url || 'https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=800'}" alt="Post Visual">
+                        <div class="card-scrim"></div>
+                        <div class="card-action-column">
+                            <button class="card-action-btn" onclick="toggleLikeLive('${data.post.id}', this)">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                <span class="like-number">0</span>
+                            </button>
+                            <button class="card-action-btn" onclick="openCommentsSheet('${data.post.id}')">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="1"></circle><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                <span id="comment-count-${data.post.id}">0</span>
+                            </button>
+                            <button class="card-action-btn" onclick="sharePostLive('${data.post.id}')">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+                                <span>Share</span>
+                            </button>
+                        </div>
+                        <div class="card-info">
+                            <div class="card-author-row">
+                                <div class="author-thumb" onclick="switchToProfile()">${data.post.author.charAt(0).toUpperCase()}</div>
+                                <div class="author-meta" onclick="switchToProfile()">
+                                    <h4>${data.post.author}</h4>
+                                    <p>@${data.post.author}</p>
+                                </div>
+                            </div>
+                            <div class="card-caption">${data.post.content}</div>
+                        </div>
+                        <div id="stored-comments-${data.post.id}" style="display: none;"></div>
+                    `;
+                        feed.prepend(newCard);
+                    }
+                })
+                .catch(err => {
+                    submitBtn.disabled = false;
+                    submitBtn.innerText = 'Publish';
+                    console.error(err);
+                });
+        }
+
+        // AJAX Toggle Like
+        function toggleLikeLive(postId, btnElement) {
+            fetch('/post/' + postId + '/like/', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const counter = btnElement.querySelector('.like-number');
+                        counter.innerText = data.total_likes;
+                        if (data.liked) {
+                            btnElement.classList.add('liked');
+                        } else {
+                            btnElement.classList.remove('liked');
+                        }
+                    }
+                });
+        }
+
+        // AJAX Add Comment
+        function sendDrawerComment() {
+            if (!activePostId) return;
+            const input = document.getElementById('drawerCommentInput');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const formData = new FormData();
+            formData.append('text', text);
+
+            fetch('/post/' + activePostId + '/comment/', {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                body: formData
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        input.value = '';
+                        const bubble = document.createElement('div');
+                        bubble.className = 'comment-row';
+                        bubble.innerHTML = `<strong>@${data.comment.author}</strong>${data.comment.text}`;
+
+                        document.getElementById('commentsDrawerList').appendChild(bubble);
+                        document.getElementById('stored-comments-' + activePostId).appendChild(bubble.cloneNode(true));
+
+                        const countElem = document.getElementById('comment-count-' + activePostId);
+                        if (countElem) {
+                            countElem.innerText = parseInt(countElem.innerText || 0) + 1;
+                        }
+                        triggerToast('Comment posted');
+                    }
+                });
+        }
+
+        // Follow / Unfollow Creator
+        function followUserLive(userId, elem) {
+            fetch('/user/' + userId + '/follow/', {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        if (elem.classList.contains('btn-inline-follow')) {
+                            if (data.following) {
+                                elem.classList.add('following');
+                                elem.innerText = 'Following';
+                            } else {
+                                elem.classList.remove('following');
+                                elem.innerText = 'Follow';
+                            }
+                        }
+                        triggerToast(data.following ? 'Following creator' : 'Unfollowed');
+                    }
+                });
+        }
+
+        // Copy Share Link
+        function sharePostLive(postId) {
+            const url = window.location.origin + '/#post-' + (postId || '');
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(url).then(() => {
+                    triggerToast('Post link copied to clipboard!');
+                });
+            } else {
+                triggerToast('Post link ready to share!');
+            }
+        }
+
+        // Auth Switcher
+        let isLogin = true;
+        function toggleAuthMode() {
+            isLogin = !isLogin;
+            const title = document.getElementById('authModalTitle');
+            const actionBtn = document.getElementById('authActionBtn');
+            const toggleBtn = document.getElementById('authToggleBtn');
+            const bioField = document.getElementById('authBioInput');
+
+            if (isLogin) {
+                title.innerText = 'Sign In to Aroze';
+                actionBtn.name = 'login';
+                actionBtn.innerText = 'Log In';
+                toggleBtn.innerText = "Don't have an account? Register";
+                bioField.style.display = 'none';
+            } else {
+                title.innerText = 'Create an Aroze Account';
+                actionBtn.name = 'register';
+                actionBtn.innerText = 'Join Aroze';
+                toggleBtn.innerText = 'Already have an account? Log In';
+                bioField.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+
+</html>
